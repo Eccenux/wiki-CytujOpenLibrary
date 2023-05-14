@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns:rdfs='http://www.w3.org/2000/01/rdf-schema#'
+    xmlns:ol="http://openlibrary.org/type/edition#" xmlns:owl='http://www.w3.org/2002/07/owl#'
+    xmlns:bibo='http://purl.org/ontology/bibo/' xmlns:rdvocab='http://RDVocab.info/elements/'
+    xmlns:rdrel='http://RDVocab.info/RDARelationshipsWEMI/' xmlns:dcterms='http://purl.org/dc/terms/'
+    xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:dcam='http://purl.org/dc/dcam/'
+    xmlns:foaf='http://xmlns.com/foaf/0.1/' xmlns:ov='http://open.vocab.org/terms/'>
+    <rdf:Description rdf:about="http://openlibrary.org/books/OL34043239M">
+        <rdrel:workManifested rdf:resource="http://openlibrary.org/works/OL25396777W" />
+        <!-- authors -->
+        <bibo:authorList rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://openlibrary.org/authors/OL8036688A">
+                <foaf:name>Allan R. Ellenberger</foaf:name>
+            </rdf:Description>
+        </bibo:authorList>
+        <!-- bibliographic description -->
+        <dcterms:title>Miriam Hopkins: Life and Films of a Hollywood Rebel</dcterms:title>
+        <dcterms:publisher>University Press of Kentucky</dcterms:publisher>
+        <dcterms:issued>2018</dcterms:issued>
+        <dcterms:extent>424</dcterms:extent>
+        <!-- subjects -->
+        <dc:subject>Motion picture actors and actresses, united states</dc:subject>
+        <dc:subject>Motion pictures, biography</dc:subject>
+    </rdf:Description>
+    <!-- administrative -->
+    <rdf:Description rdf:about="">
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-29T20:43:55.762963
+        </dcterms:modified>
+        <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-29T20:43:55.762963
+        </dcterms:created>
+        <ov:versionnumber>1</ov:versionnumber>
+    </rdf:Description>
+</rdf:RDF>

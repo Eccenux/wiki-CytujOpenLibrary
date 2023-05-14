@@ -1,0 +1,43 @@
+{
+  "type": {
+    "key": "/type/edition"
+  },
+  "authors": [{
+    "key": "/authors/OL8036688A"
+  }],
+  "isbn_13": [
+    "9780813174334"
+  ],
+  "languages": [{
+    "key": "/languages/eng"
+  }],
+  "number_of_pages": 424,
+  "publish_date": "2018",
+  "publishers": [
+    "University Press of Kentucky"
+  ],
+  "source_records": [
+    "bwb:9780813174334"
+  ],
+  "subjects": [
+    "Motion picture actors and actresses, united states",
+    "Motion pictures, biography"
+  ],
+  "title": "Miriam Hopkins",
+  "subtitle": "Life and Films of a Hollywood Rebel",
+  "full_title": "Miriam Hopkins Life and Films of a Hollywood Rebel",
+  "works": [{
+    "key": "/works/OL25396777W"
+  }],
+  "key": "/books/OL34043239M",
+  "latest_revision": 1,
+  "revision": 1,
+  "created": {
+    "type": "/type/datetime",
+    "value": "2021-09-29T20:43:55.762963"
+  },
+  "last_modified": {
+    "type": "/type/datetime",
+    "value": "2021-09-29T20:43:55.762963"
+  }
+}
