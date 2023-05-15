@@ -11,9 +11,9 @@ Pamiętaj, żeby najpierw zainstalować skrypt.
 
 1. Wejdź na https://openlibrary.org/ i wyszukaj coś.
 2. Jeśli szukasz po tytule, to wybierz potem wydanie. (szukanie po ISBN powinno zaprowadzić cię do konkretnego wydania)
-3. Na dole znajdziesz linki do cytowania wpisu („Cytuj książkę (pl.wikipedia)”).
+3. Z boku znajdziesz linki do cytowania wpisu („Cytuj książkę (pl)”).
 
-<img src="https://raw.githubusercontent.com/Eccenux/wiki-CytujOpenLibrary/master/image/screen_cytuj.png" width="500" alt="Screen. Pobierz wpis w katalogu: RDF / JSON / OPDS | cite book (en.wikipedia) • Cytuj książkę (pl.wikipedia)">
+<img src="https://raw.githubusercontent.com/Eccenux/wiki-CytujOpenLibrary/master/image/screen_cytuj.png" width="" alt="Screen. Wikipedia: Cytuj książkę (pl), Cite book (en).">
 
 
 Instalacja
