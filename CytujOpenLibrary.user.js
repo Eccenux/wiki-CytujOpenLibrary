@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Wiki: Cytuj OpenLibrary
 // @namespace    pl.enux.wiki
-// @version      1.0.1
+// @version      1.1.0
 // @description  Polskie cytowanie książek na podstawie OpenLibrary.
 // @author       Nux
 // @match        https://openlibrary.org/books/*
@@ -193,9 +193,53 @@ var QuoteActions = class {
 		});
 	}
 
+	/** Add styles. */
+	addStyles() {
+		if (this._stylesDone) {
+			return;
+		}
+		this._stylesDone = true;
+		document.body.insertAdjacentHTML('afterbegin', `<style>
+		dialog.wikiquote::backdrop {
+			background-color: rgba(0, 0, 0, 0.37);
+			backdrop-filter: blur(1.0px);
+		}
+		dialog.wikiquote {
+			border: 1px solid black;
+			border-radius: .5em;
+
+			opacity: 0;
+		}
+		dialog.wikiquote[open] {
+			animation: wikiFadeIn .3s ease normal;
+			opacity: 1;
+		}
+		@keyframes wikiFadeIn{
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+		</style>`)
+	}
+
 	/** Open with quote text. */
 	openDialog(text, tplLang) {
+		let id = 'nux-quote-dialog';
+
+		// delete previous
+		let previous = document.getElementById(id);
+		if (previous) {
+			previous.remove();
+		} else {
+			this.addStyles();
+		}
+
 		let dialog = document.createElement('dialog');
+		dialog.id = id;
+		dialog.className = 'wikiquote';
 		dialog.style.cssText = `width: 30em;`;
 		dialog.innerHTML = `
 			<h2 style="font-size: 110%;padding: 0;margin: 0;">Cytat dla ${tplLang==='pl' ? 'Polskiej' : 'Angielskiej'} Wikipedii</h2>
