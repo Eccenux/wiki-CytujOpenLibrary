@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Wiki: Cytuj OpenLibrary
 // @namespace    pl.enux.wiki
-// @version      0.0.1
+// @version      0.1.0
 // @description  Polskie cytowanie książek na podstawie OpenLibrary.
 // @author       Nux
 // @match        https://openlibrary.org/books/*
@@ -26,7 +26,6 @@ var CytujOpenLibrary = class {
 			date: this.json.publish_date,
 			lang: this.readLangs(),
 		};
-		console.log(quote);
 		return quote;
 	}
 
@@ -118,6 +117,8 @@ var QuoteActions = class {
 	 */
 	constructor(cytuj) {
 		this.q = cytuj;
+		/** cache */
+		this.quote = null;
 	}
 
 	/**
@@ -125,9 +126,14 @@ var QuoteActions = class {
 	 * @param {Function} callback 
 	 */
 	getPl(callback) {
-		// TODO: add cashing? (don't load 2nd time?)
+		// don't load 2nd time (assumes the descriptions don't change dynamically)
+		if (this.quote && typeof this.quote === 'object') {
+			callback(this.q.renderPl(this.quote));
+			return;
+		}
 		this.q.load().then((quote)=>{
-			console.log(this.q.renderPl(quote));
+			console.log('[QuoteActions]', 'data:', quote);
+			this.quote = quote;
 			callback(this.q.renderPl(quote));
 		});
 	}
@@ -204,6 +210,5 @@ var cytuj = new CytujOpenLibrary();
 var qactions = new QuoteActions(cytuj);
 qactions.safeInit();
 
-// TODO: getPl caching
 // TODO: focus on click
 // TODO: remove previous on double-run?
