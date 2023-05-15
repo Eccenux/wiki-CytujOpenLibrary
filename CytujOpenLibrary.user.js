@@ -19,11 +19,26 @@ var CytujOpenLibrary = class {
 			authors: this.readAuthors(),
 			title: this.json.title,
 			isbn: this.readIsbn(),
-			publisher: this.firstArray(this.json.publishers),
+			publishers: this.json.publishers,
 			date: this.json.publish_date,
 			lang: this.readLangs(),
 		};
 		console.log(quote);
+		return quote;
+	}
+
+	renderPl(quote) {
+		let author = this.flatArray(quote.authors, ', ');
+		let publisher = this.firstArray(quote.publishers);
+		let lang = this.firstArray(quote.lang);
+		return `{{Cytuj książkę
+			| autor = ${author}
+			| tytuł = ${quote.title}
+			| wydawca = ${publisher}
+			| data = ${quote.date}
+			| isbn = ${quote.isbn}
+			| język = ${lang}
+		}}`.replace(/\n\s+/g, ' ');
 	}
 
 	/** Load RDF XML as a promise. */
@@ -50,12 +65,13 @@ var CytujOpenLibrary = class {
 	}
 	/** Read ISBN 13 with 10 fallback. */
 	readIsbn() {
-		let isbn = this.json.isbn_13;
-		if (typeof isbn !== 'string') {
-			isbn = this.json.isbn_10;
-			if (typeof isbn !== 'string') {
-				isbn = this.json.isbn;
-			}
+		let isbn = '';
+		if (Array.isArray(this.json.isbn_13)) {
+			isbn = this.firstArray(this.json.isbn_13);
+		} else if (Array.isArray(this.json.isbn_10)) {
+			isbn = this.firstArray(this.json.isbn_10);
+		} else if (Array.isArray(this.json.isbn)) {
+			isbn = this.firstArray(this.json.isbn);
 		}
 		return isbn;
 	}
@@ -72,11 +88,11 @@ var CytujOpenLibrary = class {
 		return [];
 	}
 	/** Safely flatten the array. */
-	flatArray(arr) {
+	flatArray(arr, separator) {
 		if (!Array.isArray(arr) || !arr.length) {
 			return '';
 		}
-		arr.join(', ');
+		return arr.join(separator);
 	}
 	/** Safe 1st. */
 	firstArray(arr) {
@@ -88,4 +104,6 @@ var CytujOpenLibrary = class {
 }
 
 var cytuj = new CytujOpenLibrary();
-cytuj.load();
+cytuj.load().then((quote)=>{
+	console.log(cytuj.renderPl(quote))
+});
