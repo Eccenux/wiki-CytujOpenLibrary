@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Wiki: Cytuj OpenLibrary
 // @namespace    pl.enux.wiki
-// @version      0.2.0
+// @version      0.3.0
 // @description  Polskie cytowanie książek na podstawie OpenLibrary.
 // @author       Nux
 // @match        https://openlibrary.org/books/*
@@ -81,11 +81,44 @@ var CytujOpenLibrary = class {
 	}
 	/** @private Read langs as an array. */
 	readLangs() {
+		const langMap = {
+			"ara": "ar",
+			"bul": "bg",
+			"zho": "zh",
+			"hrv": "hr",
+			"ces": "cs",
+			"dan": "da",
+			"nld": "nl",
+			"eng": "en",
+			"est": "et",
+			"fin": "fi",
+			"fra": "fr",
+			"deu": "de",
+			"ell": "el",
+			"hin": "hi",
+			"hun": "hu",
+			"ita": "it",
+			"jpn": "ja",
+			"lav": "lv",
+			"lit": "lt",
+			"nor": "no",
+			"pol": "pl",
+			"por": "pt",
+			"ron": "ro",
+			"rus": "ru",
+			"srp": "sr",
+			"slk": "sk",
+			"slv": "sl",
+			"spa": "es",
+			"swe": "sv",
+			"ukr": "uk"
+		};
 		if (Array.isArray(this.json.languages) && this.json.languages.length) {
 			return this.json.languages.map(l=>l.key.replace('/languages/', '')).map(k=>{
-				if (k === 'eng') {
-					return 'en';
+				if (k in langMap) {
+					return langMap[k];
 				}
+				console.warn('[CytujOpenLibrary]', 'Unknown language:', k);
 				return k;
 			});
 		}
@@ -132,7 +165,7 @@ var QuoteActions = class {
 			return;
 		}
 		this.q.load().then((quote)=>{
-			console.log('[QuoteActions]', 'data:', quote);
+			//console.log('[QuoteActions]', 'data:', quote);
 			this.quote = quote;
 			callback(this.q.renderPl(quote));
 		});
