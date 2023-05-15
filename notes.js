@@ -1,16 +1,34 @@
-// works from Wikipedia
-var re = await fetch("https://openlibrary.org/books/OL34043239M.json", {
-    "credentials": "omit",
-    "method": "GET",
-    "mode": "cors"
+//
+// OpenLibrary API vs CORS
+// Works from Wikipedia (allows CORS).
+// Docs: https://openlibrary.org/dev/docs/api/books
+var re = await fetch("https://openlibrary.org/isbn/9780140328721.json", {
+	"credentials": "omit",
+	"method": "GET",
+	"mode": "cors"
 });
 var json = await re.json();
 console.log(json);
-
-// how to get OL34043239M from ISBN?
-// covers work with ISBN.
-// https://covers.openlibrary.org/b/isbn/9788375760040-M.jpg?default=false
-
+// rdf doesn't work though 🤔...
+/*
+var re = await fetch("https://openlibrary.org/isbn/9780140328721.rdf", {
+	"credentials": "omit",
+	"method": "GET",
+	"mode": "cors"
+})
+// you can get a redirect urls like so (though that RDF URL is blocked too):
+url = re.url.replace('.json', '.rdf') 
+*/
+// you can get author info from API though
+var authorKey = json.authors[0].key;
+var author = await fetch('https://openlibrary.org/authors/OL34184A.json', {
+	"credentials": "omit",
+	"method": "GET",
+	"mode": "cors"
+})
+.then(response => response.json())
+;
+console.log(author);
 
 //
 // Language mapping
