@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Wiki: Cytuj OpenLibrary
 // @namespace    pl.enux.wiki
-// @version      1.1.0
+// @version      1.1.1
 // @description  Polskie cytowanie książek na podstawie OpenLibrary.
 // @author       Nux
 // @match        https://openlibrary.org/books/*
@@ -330,17 +330,17 @@ var QuoteActions = class {
 		container.className = 'cta-section';
 		container.insertAdjacentHTML('afterbegin', '<strong>Wikipedia</strong>:');
 
-		// en
-		this.createLink(container, {
-			lang: 'en',
-			text: 'Cite book (en)',
-			title: 'Zacytuj to na Angielskiej Wikipedii',
-		});
 		// pl
 		this.createLink(container, {
 			lang: 'pl',
 			text: 'Cytuj książkę (pl)',
 			title: 'Zacytuj to na Polskiej Wikipedii',
+		});
+		// en
+		this.createLink(container, {
+			lang: 'en',
+			text: 'Cite book (en)',
+			title: 'Zacytuj to na Angielskiej Wikipedii',
 		});
 
 		// move container
