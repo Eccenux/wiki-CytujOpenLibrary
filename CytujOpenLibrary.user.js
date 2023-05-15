@@ -42,8 +42,11 @@ var CytujOpenLibrary = class {
 	/** Read authors as an array. */
 	readAuthors() {
 		const authorList = this.rdf.getElementsByTagName("bibo:authorList")[0];
-		const authorNames = authorList.getElementsByTagName("foaf:name");
-		return authorNames.map(el=>el.textContent);
+		if (authorList) {
+			const authorNames = authorList.getElementsByTagName("foaf:name");
+			return [...authorNames].map(el=>el.textContent);
+		}
+		return [];
 	}
 	/** Read ISBN 13 with 10 fallback. */
 	readIsbn() {
