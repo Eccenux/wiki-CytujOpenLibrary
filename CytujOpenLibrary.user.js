@@ -108,9 +108,9 @@ var CytujOpenLibrary = class {
 }
 
 /**
- * Quote actions.
+ * Quote actions (buttons).
  */
-var QuoteButtons = class {
+var QuoteActions = class {
 	/**
 	 * cons.
 	 * @param {CytujOpenLibrary} cytuj 
@@ -153,9 +153,13 @@ var QuoteButtons = class {
 		dialog.showModal();
 	}
 
+	/** Init when ready. */
 	init() {
 		// fix current
 		const enQuote = document.querySelector('#wikilink');
+		if (!enQuote) {
+			return false;
+		}
 		enQuote.textContent = 'cite book (en.wikipedia)';
 		enQuote.title = 'Zacytuj to na Angielskiej Wikipedii';
 		
@@ -173,10 +177,29 @@ var QuoteButtons = class {
 		container.appendChild(document.createTextNode('•'));
 		container.appendChild(el);
 	}
+
+	/** Check if the page is ready. */
+	checkReady() {
+		return document.readyState === "complete" || document.readyState === "interactive";
+	}
+
+	/** Run any time to init actions on the page. */
+	safeInit() {
+		if (this.checkReady()) {
+			this.init();
+		} else {
+			document.addEventListener('DOMContentLoaded', () => {
+				this.init();
+			});
+		}
+	}
 }
 
 var cytuj = new CytujOpenLibrary();
-var buttons = new QuoteButtons(cytuj);
-window.addEventListener('load', () => {
-	buttons.init();
-});
+var qactions = new QuoteActions(cytuj);
+qactions.safeInit();
+
+// TODO: dialog layout
+// TODO: getPl caching
+// TODO: focus
+// TODO: remove previous on double-run?
