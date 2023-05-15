@@ -42,6 +42,7 @@ var CytujOpenLibrary = class {
 			| data = ${quote.date}
 			| isbn = ${quote.isbn}
 			| język = ${lang}
+			| strony = 
 		}}`.replace(/\n\s+/g, ' ');
 	}
 
@@ -134,17 +135,21 @@ var QuoteActions = class {
 	/** Open with quote text. */
 	openDialog(text) {
 		let dialog = document.createElement('dialog');
+		dialog.style.cssText = `width: 30em;`;
 		dialog.innerHTML = `
-		  <form>
-			<p>
-			  <textarea></textarea>
-			</p>
-			<div>
-			  <button class="dialog-ok" value="default">OK</button>
-			</div>
-		  </form>
+			<h2 style="font-size: 110%;padding: 0;margin: 0;">Cytat dla Polskiej Wikipedii</h2>
+			<form>
+				<p>Ten kod możesz skopiować zarówno do zwykłego edytora kodu jak i edytora wizualnego (najlepiej przed kropką kończącą zdanie).</p>
+				<textarea style="width: 100%;box-sizing: border-box;height: 7em;"></textarea>
+				<p>Pamiętaj, żeby podać numer strony (lub zakres stron) które chesz zacytować. 
+				Możesz też podać Tytuł rozdziału (parametr „rozdział”).
+				To ważne w wypadku przypisów, żeby odnosić się do konkretnej treści.
+				<div style="text-align: right;">
+					<button class="dialog-ok" value="default">Zamknij</button>
+				</div>
+			</form>
 		`;
-		dialog.querySelector('textarea').value = text;
+		dialog.querySelector('textarea').value = `<ref>${text}</ref>`;
 		dialog.querySelector('.dialog-ok').addEventListener('click', (event) => {
 			event.preventDefault();	// prevent submit
 			dialog.close();
@@ -174,7 +179,7 @@ var QuoteActions = class {
 				this.openDialog(text);
 			})
 		};
-		container.appendChild(document.createTextNode('•'));
+		container.appendChild(document.createTextNode(' • '));
 		container.appendChild(el);
 	}
 
@@ -199,7 +204,6 @@ var cytuj = new CytujOpenLibrary();
 var qactions = new QuoteActions(cytuj);
 qactions.safeInit();
 
-// TODO: dialog layout
 // TODO: getPl caching
-// TODO: focus
+// TODO: focus on click
 // TODO: remove previous on double-run?
