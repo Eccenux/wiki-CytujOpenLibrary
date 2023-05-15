@@ -101,7 +101,7 @@ var CytujOpenLibrary = class {
 		const langMap = {
 			"ara": "ar",
 			"bul": "bg",
-			"zho": "zh",
+			"chi": "zh",
 			"hrv": "hr",
 			"ces": "cs",
 			"dan": "da",
