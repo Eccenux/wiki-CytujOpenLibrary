@@ -198,7 +198,7 @@ var QuoteActions = class {
 		let dialog = document.createElement('dialog');
 		dialog.style.cssText = `width: 30em;`;
 		dialog.innerHTML = `
-			<h2 style="font-size: 110%;padding: 0;margin: 0;">Cytat dla Polskiej Wikipedii</h2>
+			<h2 style="font-size: 110%;padding: 0;margin: 0;">Cytat dla ${tplLang==='pl' ? 'Polskiej' : 'Angielskiej'} Wikipedii</h2>
 			<form>
 				<p>Ten kod możesz skopiować zarówno do zwykłego edytora kodu jak i edytora wizualnego
 				${tplLang==='pl'?' (najlepiej przed kropką kończącą zdanie)' : ''}.</p>
