@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Wiki: Cytuj OpenLibrary
 // @namespace    pl.enux.wiki
-// @version      0.1.0
+// @version      0.2.0
 // @description  Polskie cytowanie książek na podstawie OpenLibrary.
 // @author       Nux
 // @match        https://openlibrary.org/books/*
@@ -156,6 +156,10 @@ var QuoteActions = class {
 			</form>
 		`;
 		dialog.querySelector('textarea').value = `<ref>${text}</ref>`;
+		dialog.querySelector('textarea').addEventListener('click', function() {
+			this.select();
+			this.focus();
+		});
 		dialog.querySelector('.dialog-ok').addEventListener('click', (event) => {
 			event.preventDefault();	// prevent submit
 			dialog.close();
@@ -210,5 +214,4 @@ var cytuj = new CytujOpenLibrary();
 var qactions = new QuoteActions(cytuj);
 qactions.safeInit();
 
-// TODO: focus on click
 // TODO: remove previous on double-run?
