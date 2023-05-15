@@ -25,11 +25,12 @@ var CytujOpenLibrary = class {
 			publishers: this.json.publishers,
 			date: this.json.publish_date,
 			lang: this.readLangs(),
+			ol: this.json.key.replace('/books/OL', ''),
 		};
 		return quote;
 	}
 
-	/** Render loaded for pl. */
+	/** Render data for pl.wiki */
 	renderPl(quote) {
 		let author = this.flatArray(quote.authors, ', ');
 		let publisher = this.firstArray(quote.publishers);
@@ -42,6 +43,22 @@ var CytujOpenLibrary = class {
 			| isbn = ${quote.isbn}
 			| język = ${lang}
 			| strony = 
+		}}`.replace(/\n\s+/g, ' ');
+	}
+	/** Render data for en.wiki. */
+	renderEn(quote) {
+		let author = this.flatArray(quote.authors, ', ');
+		let publisher = this.firstArray(quote.publishers);
+		let lang = this.firstArray(quote.lang);
+		return `{{cite book
+			|author=${author}
+			|title=${quote.title}
+			|publisher=${publisher}
+			|date=${quote.date}
+			|isbn=${quote.isbn}
+			|lang=${lang}
+			|ol=${quote.ol}
+			|page=
 		}}`.replace(/\n\s+/g, ' ');
 	}
 
@@ -158,30 +175,36 @@ var QuoteActions = class {
 	 * Get Polish.
 	 * @param {Function} callback 
 	 */
-	getPl(callback) {
+	getText(lang, callback) {
+		let render = (quote)=>this.q.renderPl(quote);
+		if (lang === 'en') {
+			render = (quote)=>this.q.renderEn(quote);
+		}
+
 		// don't load 2nd time (assumes the descriptions don't change dynamically)
 		if (this.quote && typeof this.quote === 'object') {
-			callback(this.q.renderPl(this.quote));
+			callback(render(this.quote));
 			return;
 		}
 		this.q.load().then((quote)=>{
 			//console.log('[QuoteActions]', 'data:', quote);
 			this.quote = quote;
-			callback(this.q.renderPl(quote));
+			callback(render(quote));
 		});
 	}
 
 	/** Open with quote text. */
-	openDialog(text) {
+	openDialog(text, tplLang) {
 		let dialog = document.createElement('dialog');
 		dialog.style.cssText = `width: 30em;`;
 		dialog.innerHTML = `
 			<h2 style="font-size: 110%;padding: 0;margin: 0;">Cytat dla Polskiej Wikipedii</h2>
 			<form>
-				<p>Ten kod możesz skopiować zarówno do zwykłego edytora kodu jak i edytora wizualnego (najlepiej przed kropką kończącą zdanie).</p>
+				<p>Ten kod możesz skopiować zarówno do zwykłego edytora kodu jak i edytora wizualnego
+				${tplLang==='pl'?' (najlepiej przed kropką kończącą zdanie)' : ''}.</p>
 				<textarea style="width: 100%;box-sizing: border-box;height: 7em;"></textarea>
 				<p>Pamiętaj, żeby podać numer strony (lub zakres stron) które chesz zacytować. 
-				Możesz też podać Tytuł rozdziału (parametr „rozdział”).
+				Możesz też podać Tytuł rozdziału (parametr „${tplLang==='pl' ? 'rozdział' : 'chapter'}”).
 				To ważne w wypadku przypisów, żeby odnosić się do konkretnej treści.
 				<div style="display: flex;gap: .5em;justify-content: flex-end;">
 					<button class="copy">Kopiuj 📋</a>
@@ -235,31 +258,46 @@ var QuoteActions = class {
 		before.parentNode.insertBefore(el, before);
 	}
 
+	/** Cite-dialog link-button. */
+	createLink(container, options) {
+		const el = document.createElement('a');
+		el.textContent = options.text;
+		el.title = options.title;
+		el.href = 'javascript:;';
+		el.onclick = () => {
+			this.getText(options.lang, (text) => {
+				this.openDialog(text, options.lang);
+			})
+		};
+
+		container.appendChild(el);
+		el.insertAdjacentHTML('beforebegin', '<br> 🌐 ');
+	}
+
 	/** Init when ready. */
 	init() {
-		// fix current
 		const enQuote = document.querySelector('#wikilink');
 		if (!enQuote) {
 			return false;
 		}
-		enQuote.textContent = 'Cite book (en)';
-		enQuote.title = 'Zacytuj to na Angielskiej Wikipedii';
-		enQuote.insertAdjacentHTML('beforebegin', '<br><strong>Wikipedia</strong>:');
-		
-		const container = document.querySelector('#historyTools');
-		// append pl
-		const el = document.createElement('a');
-		el.textContent = 'Cytuj książkę (pl)';
-		el.title = 'Zacytuj to na Polskiej Wikipedii';
-		el.href = 'javascript:;';
-		el.onclick = () => {
-			this.getPl((text) => {
-				this.openDialog(text);
-			})
-		};
-		container.insertBefore(el, enQuote);
-		el.insertAdjacentHTML('beforebegin', '<br> 🌐 ');
-		enQuote.insertAdjacentHTML('beforebegin', '<br> 🌐 ');
+
+		// container
+		const container = document.createElement('div');
+		container.className = 'cta-section';
+		container.insertAdjacentHTML('afterbegin', '<strong>Wikipedia</strong>:');
+
+		// en
+		this.createLink(container, {
+			lang: 'en',
+			text: 'Cite book (en)',
+			title: 'Zacytuj to na Angielskiej Wikipedii',
+		});
+		// pl
+		this.createLink(container, {
+			lang: 'pl',
+			text: 'Cytuj książkę (pl)',
+			title: 'Zacytuj to na Polskiej Wikipedii',
+		});
 
 		// move container
 		this.reflowContainer(container);
