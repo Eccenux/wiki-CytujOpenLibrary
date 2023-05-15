@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Wiki: Cytuj OpenLibrary
 // @namespace    pl.enux.wiki
-// @version      0.3.0
+// @version      0.4.0
 // @description  Polskie cytowanie książek na podstawie OpenLibrary.
 // @author       Nux
 // @match        https://openlibrary.org/books/*
@@ -183,13 +183,15 @@ var QuoteActions = class {
 				<p>Pamiętaj, żeby podać numer strony (lub zakres stron) które chesz zacytować. 
 				Możesz też podać Tytuł rozdziału (parametr „rozdział”).
 				To ważne w wypadku przypisów, żeby odnosić się do konkretnej treści.
-				<div style="text-align: right;">
+				<div style="display: flex;gap: .5em;justify-content: flex-end;">
+					<button class="copy">Kopiuj 📋</a>
 					<button class="dialog-ok" value="default">Zamknij</button>
 				</div>
 			</form>
 		`;
-		dialog.querySelector('textarea').value = `<ref>${text}</ref>`;
-		dialog.querySelector('textarea').addEventListener('click', function() {
+		const dataField = dialog.querySelector('textarea');
+		dataField.value = `<ref>${text}</ref>`;
+		dataField.addEventListener('click', function() {
 			this.select();
 			this.focus();
 		});
@@ -197,9 +199,25 @@ var QuoteActions = class {
 			event.preventDefault();	// prevent submit
 			dialog.close();
 		});
+		dialog.querySelector('.copy').addEventListener('click', (event) => {
+			event.preventDefault();	// prevent submit
+			this.copyTextField(dataField);
+		});
 		document.body.appendChild(dialog);
 		dialog.showModal();
 	}
+	
+	/**
+	 * Copy text field contents.
+	 * @param {Element|String} source Element or selector.
+	 */
+	copyTextField(source) {
+		if (typeof source === 'string') {
+			source = document.querySelector(source);
+		}
+		source.select();
+		document.execCommand("copy");
+	}	
 
 	/** Init when ready. */
 	init() {
