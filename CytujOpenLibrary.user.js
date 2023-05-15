@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Wiki: Cytuj OpenLibrary
 // @namespace    pl.enux.wiki
-// @version      0.4.0
+// @version      1.0.0
 // @description  Polskie cytowanie książek na podstawie OpenLibrary.
 // @author       Nux
 // @match        https://openlibrary.org/books/*
@@ -217,7 +217,23 @@ var QuoteActions = class {
 		}
 		source.select();
 		document.execCommand("copy");
-	}	
+	}
+	/**
+	 * Move cite tools container.
+	 */
+	reflowContainer(container) {
+		const el = document.createElement('div');
+		el.className = 'panel';
+		const sub = document.createElement('div');
+		sub.className = 'btn-notice';
+		sub.style.cssText = 'display:flex';
+		el.appendChild(sub);
+		sub.appendChild(container);
+
+		// should be in a sidebar in a visable
+		const before = document.querySelector('#read').lastElementChild;
+		before.parentNode.insertBefore(el, before);
+	}
 
 	/** Init when ready. */
 	init() {
@@ -226,13 +242,14 @@ var QuoteActions = class {
 		if (!enQuote) {
 			return false;
 		}
-		enQuote.textContent = 'cite book (en.wikipedia)';
+		enQuote.textContent = 'Cite book (en)';
 		enQuote.title = 'Zacytuj to na Angielskiej Wikipedii';
+		enQuote.insertAdjacentHTML('beforebegin', '<br><strong>Wikipedia</strong>:');
 		
 		const container = document.querySelector('#historyTools');
 		// append pl
 		const el = document.createElement('a');
-		el.textContent = 'Cytuj książkę (pl.wikipedia)';
+		el.textContent = 'Cytuj książkę (pl)';
 		el.title = 'Zacytuj to na Polskiej Wikipedii';
 		el.href = 'javascript:;';
 		el.onclick = () => {
@@ -240,8 +257,12 @@ var QuoteActions = class {
 				this.openDialog(text);
 			})
 		};
-		container.appendChild(document.createTextNode(' • '));
-		container.appendChild(el);
+		container.insertBefore(el, enQuote);
+		el.insertAdjacentHTML('beforebegin', '<br> 🌐 ');
+		enQuote.insertAdjacentHTML('beforebegin', '<br> 🌐 ');
+
+		// move container
+		this.reflowContainer(container);
 	}
 
 	/** Check if the page is ready. */

@@ -32,3 +32,18 @@ tab.forEach((tr)=>{
 })
 console.log(langMap);
 copy(langMap);
+
+//
+// re-flow history
+//document.querySelector('#header-bar').appendChild(historyTools);
+//contentBody.prepend(historyTools);
+var el = document.createElement('div');
+el.className = 'panel';
+var sub = document.createElement('div');
+sub.className = 'btn-notice';
+sub.style.cssText = 'display:flex';
+el.appendChild(sub);
+sub.appendChild(historyTools);
+
+var before = document.querySelector('.panel').nextElementSibling;
+before.parentNode.insertBefore(el, before);
