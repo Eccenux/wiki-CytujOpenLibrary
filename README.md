@@ -2,8 +2,7 @@
 
 Polskie cytowanie książek na podstawie OpenLibrary.
 
-Przykładowa strona:
-https://openlibrary.org/books/OL34043239M/Miriam_Hopkins
+[Instalacja w sekcji poniżej](#instalacja).
 
 Sposób użycia
 --------------------
@@ -14,6 +13,11 @@ Pamiętaj, żeby najpierw zainstalować skrypt.
 3. Z boku znajdziesz linki do cytowania wpisu („Cytuj książkę (pl)”).
 
 <img src="https://raw.githubusercontent.com/Eccenux/wiki-CytujOpenLibrary/master/image/screen_cytuj.png" width="" alt="Screen. Wikipedia: Cytuj książkę (pl), Cite book (en).">
+
+Przykładowe strony, na których zadziała cytowanie:
+
+ - https://openlibrary.org/books/OL34043239M/Miriam_Hopkins
+ - https://openlibrary.org/books/OL31136126M/Igraszki_literackie_polonist%C3%B3w
 
 
 Instalacja
