@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 // @name         Wiki: Cytuj OpenLibrary
 // @namespace    pl.enux.wiki
-// @version      1.1.1
+// @version      1.2.0
 // @description  Polskie cytowanie książek na podstawie OpenLibrary.
 // @author       Nux
 // @match        https://openlibrary.org/books/*
@@ -23,9 +23,11 @@ var CytujOpenLibrary = class {
 			title: this.json.title,
 			isbn: this.readIsbn(),
 			publishers: this.json.publishers,
+			publish_places: this.json.publish_places,
 			date: this.json.publish_date,
 			lang: this.readLangs(),
 			ol: this.json.key.replace('/books/OL', ''),
+			lccn: this.firstArray(this.json.lccn),
 		};
 		return quote;
 	}
@@ -44,6 +46,27 @@ var CytujOpenLibrary = class {
 			| język = ${lang}
 			| strony = 
 		}}`.replace(/\n\s+/g, ' ');
+	}
+	renderPlGeneric(quote) {
+		let author = this.flatArray(quote.authors, '; ');
+		let publisher = this.firstArray(quote.publishers);
+		let publish_place = this.firstArray(quote.publish_places);
+		let lang = this.firstArray(quote.lang);
+		return `{{Cytuj
+			| autor = ${author}
+			| tytuł = ${quote.title}
+			| wydawca = ${publisher}
+			| miejsce = ${publish_place}
+			| data = ${quote.date}
+			| isbn = ${quote.isbn}
+			| lccn = ${quote.lccn}
+			| ol = ${quote.ol}
+			| język = ${lang}
+			| s = 
+		}}`
+			.replace(/\n\s+/g, ' ')
+			.replace(/\| (wydawca|miejsce|lccn|ol) = +(?=\|)/g, ' ')
+		;
 	}
 	/** Render data for en.wiki. */
 	renderEn(quote) {
@@ -177,8 +200,9 @@ var QuoteActions = class {
 	 */
 	getText(lang, callback) {
 		let render = (quote)=>this.q.renderPl(quote);
-		if (lang === 'en') {
-			render = (quote)=>this.q.renderEn(quote);
+		switch (lang) {
+			case 'pl-generic': render = (quote)=>this.q.renderPlGeneric(quote); break;
+			case 'en': render = (quote)=>this.q.renderEn(quote); break;
 		}
 
 		// don't load 2nd time (assumes the descriptions don't change dynamically)
@@ -241,14 +265,16 @@ var QuoteActions = class {
 		dialog.id = id;
 		dialog.className = 'wikiquote';
 		dialog.style.cssText = `width: 30em;`;
+		let wikiLang = tplLang.replace(/-.+/, '');	// pl-generic = pl; en-us = en
+		let pagesParam = tplLang==='pl' ? 'strony' : (tplLang==='pl-generic' ? 's' : 'page');
 		dialog.innerHTML = `
-			<h2 style="font-size: 110%;padding: 0;margin: 0;">Cytat dla ${tplLang==='pl' ? 'Polskiej' : 'Angielskiej'} Wikipedii</h2>
+			<h2 style="font-size: 110%;padding: 0;margin: 0;">Cytat dla ${wikiLang==='pl' ? 'Polskiej' : 'Angielskiej'} Wikipedii</h2>
 			<form>
 				<p>Ten kod możesz skopiować zarówno do zwykłego edytora kodu jak i edytora wizualnego
-				${tplLang==='pl'?' (najlepiej przed kropką kończącą zdanie)' : ''}.</p>
+				${wikiLang==='pl'?' (najlepiej przed kropką kończącą zdanie)' : ''}.</p>
 				<textarea style="width: 100%;box-sizing: border-box;height: 7em;"></textarea>
-				<p>Pamiętaj, żeby podać numer strony (lub zakres stron) które chesz zacytować. 
-				Możesz też podać Tytuł rozdziału (parametr „${tplLang==='pl' ? 'rozdział' : 'chapter'}”).
+				<p>Pamiętaj, żeby podać numer strony (lub zakres stron) które chesz zacytować (parametr „${pagesParam}”). 
+				Możesz też podać Tytuł rozdziału (parametr „${wikiLang==='pl' ? 'rozdział' : 'chapter'}”).
 				To ważne w wypadku przypisów, żeby odnosić się do konkretnej treści.
 				<div style="display: flex;gap: .5em;justify-content: flex-end;">
 					<button class="copy">Kopiuj 📋</a>
@@ -331,6 +357,11 @@ var QuoteActions = class {
 		container.insertAdjacentHTML('afterbegin', '<strong>Wikipedia</strong>:');
 
 		// pl
+		this.createLink(container, {
+			lang: 'pl-generic',
+			text: 'Cytuj (pl, ogólny)',
+			title: 'Zacytuj to na Polskiej Wikipedii, szablon ogólny, więcej danych',
+		});
 		this.createLink(container, {
 			lang: 'pl',
 			text: 'Cytuj książkę (pl)',
